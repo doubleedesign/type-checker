@@ -6,13 +6,13 @@ Example setup:
 ```json5
 // tsconfig.json
 {
-	"compilerOptions": {
-		"option": "your_usual_options_here"
-	},
-	"typechecker": {
-		"types": ["Artist", "Album"], // names of the types you want to be able to check against 
-		"locations": ["./types.ts"] // where the type definitions are located 
-	}
+    "compilerOptions": {
+        "option": "your_usual_options_here"
+    },
+    "typechecker": {
+        "types": ["Artist", "Album"], // names of the types you want to be able to check against 
+        "locations": ["./types.ts"] // where the type definitions are located 
+    }
 }
 ```
 
