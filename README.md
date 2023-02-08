@@ -18,7 +18,7 @@ Example setup:
 
 Example usage:
 ```ts
-import { TypeChecker } from '@doubleedesign/type-checker';
+import { TypeChecker } from 'type-checker';
 
 const boss: Artist = { name: 'Bruce Springsteen' };
 const type: string[] = TypeChecker.getType(boss); // ['Artist']
