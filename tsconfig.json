@@ -1,0 +1,17 @@
+{
+	"compilerOptions": {
+		"baseUrl": "./",
+		"outDir": "dist",
+		"module": "esnext",
+		"target": "esnext",
+		"moduleResolution": "node",
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true,
+		"declaration": true,
+		"isolatedModules": true
+	},
+	"include": ["**/*.ts"],
+	"exclude": [
+		"./node_modules"
+	]
+}
