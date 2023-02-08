@@ -61,8 +61,6 @@ export const TypeChecker = {
 			return ['object'];
 		}
 
-		console.log(matches);
-
 		return matches;
 	}
 };
