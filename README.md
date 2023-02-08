@@ -3,7 +3,7 @@
 A work-in-progress tool to provide the ability to check which TypeScript type(s) an object is anywhere in your code.
 
 Example setup: 
-```json lines
+```json5
 // tsconfig.json
 {
 	"compilerOptions": {
