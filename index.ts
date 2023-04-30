@@ -48,7 +48,7 @@ export const TypeChecker = {
 			// TODO: This is very slow, find a way to cache the schema so it's not regenerated on every check
 			const schema = TJS.generateSchema(program, type, { required: true });
 
-			if(schema.required.every(prop => itemProperties.includes(prop))) {
+			if(schema.required && schema.required.every(prop => itemProperties.includes(prop))) {
 				matches.push(type);
 			}
 		});
