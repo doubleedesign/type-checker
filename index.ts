@@ -38,15 +38,21 @@ export const TypeChecker = {
 		const itemProperties = Object.keys(item);
 		const matches = [];
 
+		const settings: TJS.PartialArgs = {
+			required: true,
+		};
+
 		const program = TJS.getProgramFromFiles(
 			config.locations.map((item) => {
 				return path.resolve(item);
 			})
 		);
 
+		const generator = TJS.buildGenerator(program, settings);
+
 		[...typesToCheck].forEach((type) => {
 			// TODO: This is very slow, find a way to cache the schema so it's not regenerated on every check
-			const schema = TJS.generateSchema(program, type, { required: true });
+			const schema = TJS.generateSchema(program, type, settings, [], generator);
 
 			if(schema.required && schema.required.every(prop => itemProperties.includes(prop))) {
 				matches.push(type);
