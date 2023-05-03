@@ -1,15 +1,7 @@
 # type-checker
 
-A work-in-progress tool to provide the ability to check which TypeScript type(s) an object is anywhere in your code in a Node environment.
+Provides the ability to check which TypeScript type(s) an object is anywhere in your code in a Node development environment.
 
-Note: 
-- For performance reasons, this may not be production-ready. So far my main use of it has been for unit testing.
-- This only checks for matching object keys, not that the values are the correct type. 
-
-Roadmap/future goals:
-- Make it check values, not just keys.
-- Make it work in the browser.
-- Improve performance.
 
 Example setup: 
 ```json5
@@ -36,3 +28,12 @@ import { TypeChecker } from 'type-checker';
 const boss: Artist = { name: 'Bruce Springsteen' };
 const type: string[] = TypeChecker.getType(boss); // ['Artist']
 ```
+
+## Notes
+- For performance reasons, this may not be production-ready. So far my main use of it has been for unit testing.
+- This only checks for matching object keys, not that the values are the correct type. 
+
+## Roadmap/future goals
+- Make it check values, not just keys.
+- Make it work in the browser.
+- Improve performance.
