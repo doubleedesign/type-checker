@@ -1,13 +1,26 @@
 # type-checker
 
-A work-in-progress tool to provide the ability to check which TypeScript type(s) an object is anywhere in your code.
+A work-in-progress tool to provide the ability to check which TypeScript type(s) an object is anywhere in your code in a Node environment.
+
+Note: 
+- For performance reasons, this may not be production-ready. So far my main use of it has been for unit testing.
+- This only checks for matching object keys, not that the values are the correct type. 
+
+Roadmap/future goals:
+- Make it check values, not just keys.
+- Make it work in the browser.
+- Improve performance.
 
 Example setup: 
 ```json5
 // tsconfig.json
 {
     "compilerOptions": {
-        "option": "your_usual_options_here"
+        "baseUrl": "./",
+        "module": "esnext",
+        "target": "esnext",
+        "moduleResolution": "node",
+        // ... more options as you need
     },
     "typechecker": {
         "types": ["Artist", "Album"], // names of the types you want to be able to check against 

@@ -1,5 +1,5 @@
 import * as TJS from 'typescript-json-schema';
-import { sys as tsSys, findConfigFile, readConfigFile, parseJsonConfigFileContent } from 'typescript';
+import { sys, findConfigFile, readConfigFile, parseJsonConfigFileContent } from 'typescript';
 import * as path from 'path';
 import { Definition } from 'typescript-json-schema';
 
@@ -22,11 +22,11 @@ export const TypeChecker = {
 	 * @returns {Config} - List of type names and list of locations of type definitions
 	 */
 	getConfig: function(): Config {
-		const tsconfigPath = findConfigFile('./', tsSys.fileExists, 'tsconfig.json');
-		const tsconfigFile = readConfigFile(tsconfigPath, tsSys.readFile);
+		const tsconfigPath = findConfigFile(process.cwd(), sys.fileExists, 'tsconfig.json');
+		const tsconfigFile = readConfigFile(tsconfigPath, sys.readFile);
 		const parsedTsconfig = parseJsonConfigFileContent(
 			tsconfigFile.config,
-			tsSys,
+			sys,
 			path.dirname(tsconfigPath)
 		);
 

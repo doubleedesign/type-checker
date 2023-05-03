@@ -5,6 +5,7 @@ jest.mock('../index', () => {
 	return {
 		__esModule: true,
 		TypeChecker: {
+			// getConfig: module.TypeChecker.getConfig,
 			getConfig: jest.fn().mockReturnValue({
 				types: ['Artist', 'Album', 'Venue', 'Coords'],
 				locations: ['./test/types.ts']
