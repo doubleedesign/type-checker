@@ -1,11 +1,13 @@
-export type Artist = {
-	mbid?: string;
+export type MusicCommon = {
+	mbid: string;
+}
+
+export type Artist = MusicCommon & {
 	name: string;
 	genre?: string
 }
 
-export type Album = {
-	mbid?: string;
+export type Album = MusicCommon & {
 	isrc?: string;
 	barcode: string;
 	title: string;

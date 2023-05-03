@@ -1,6 +1,7 @@
 import * as TJS from 'typescript-json-schema';
 import { sys as tsSys, findConfigFile, readConfigFile, parseJsonConfigFileContent } from 'typescript';
 import * as path from 'path';
+import { Definition } from 'typescript-json-schema';
 
 export const TypeChecker = {
 
@@ -51,10 +52,23 @@ export const TypeChecker = {
 		const generator = TJS.buildGenerator(program, settings);
 
 		[...typesToCheck].forEach((type) => {
-			// TODO: This is very slow, find a way to cache the schema so it's not regenerated on every check
 			const schema = TJS.generateSchema(program, type, settings, [], generator);
+			let allProperties = [];
+			let requiredProperties = [];
 
-			if(schema.required && schema.required.every(prop => itemProperties.includes(prop))) {
+			// Handle basic types (schema is a single Definition)
+			if(schema.properties) {
+				allProperties = [...allProperties, ...Object.keys(schema.properties)];
+				requiredProperties = schema.required ? [...requiredProperties, ...schema.required] : [...requiredProperties];
+			}
+
+			// Handle intersection types (schema is an array of Definitions)
+			schema.allOf && schema.allOf.forEach((definition: Definition) => {
+				allProperties = [...allProperties, ...Object.keys(definition.properties)];
+				requiredProperties = [...requiredProperties, ...definition.required];
+			});
+
+			if(requiredProperties && requiredProperties.every(prop => itemProperties.includes(prop))) {
 				matches.push(type);
 			}
 		});
