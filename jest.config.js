@@ -8,8 +8,6 @@ const config = {
 				'@babel/preset-typescript',
 			],
 			plugins: [
-				'@babel/plugin-syntax-import-assertions',
-				'@babel/plugin-syntax-top-level-await'
 			]
 		}]
 	},

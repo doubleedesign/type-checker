@@ -22,7 +22,7 @@ export const TypeChecker = {
 	 * @returns {Config} - List of type names and list of locations of type definitions
 	 */
 	getConfig: function(): Config {
-		const tsconfigPath = findConfigFile(process.cwd(), tsSys.fileExists, 'tsconfig.json');
+		const tsconfigPath = findConfigFile('./', tsSys.fileExists, 'tsconfig.json');
 		const tsconfigFile = readConfigFile(tsconfigPath, tsSys.readFile);
 		const parsedTsconfig = parseJsonConfigFileContent(
 			tsconfigFile.config,
