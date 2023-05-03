@@ -2,7 +2,7 @@
 	"name": "@doubleedesign/type-checker",
 	"author": "Leesa Ward",
 	"type": "module",
-	"version": "0.0.1",
+	"version": "0.0.6",
 	"description": "Type checking functions for objects",
 	"main": "index.ts",
 	"scripts": {
