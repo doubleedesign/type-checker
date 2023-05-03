@@ -9,6 +9,7 @@ jest.mock('../index', () => {
 				types: ['Artist', 'Album', 'Venue'],
 				locations: ['./test/types.ts']
 			}),
+			getAllTypeSchemas: module.TypeChecker.getAllTypeSchemas,
 			getType: module.TypeChecker.getType
 		}
 	};
@@ -16,9 +17,16 @@ jest.mock('../index', () => {
 
 describe('Typechecker', () => {
 
+	describe('Custom schema collection', () => {
+
+		it('collects the schemas for all given types', () => {
+			const collection = TypeChecker.getAllTypeSchemas();
+		});
+	});
+
 	describe('Custom type identification', () => {
 
-		it('Will identify an Artist', () => {
+		it('Will identify an Artist from minimal data', () => {
 			const item = {
 				name: 'Bruce Springsteen',
 				mbid: '70248960-cb53-4ea4-943a-edb18f7d336f'
@@ -26,6 +34,17 @@ describe('Typechecker', () => {
 			const type = TypeChecker.getType(item);
 
 			expect(type).toEqual(expect.arrayContaining(['Artist']));
+		});
+
+		it('Will identify an Artist as only an artist when all fields are present', () => {
+			const item = {
+				name: 'Bruce Springsteen',
+				mbid: '70248960-cb53-4ea4-943a-edb18f7d336f',
+				genre: 'Rock'
+			};
+			const type = TypeChecker.getType(item);
+
+			expect(type).toEqual(['Artist']);
 		});
 
 		it('Will identify an Album', () => {

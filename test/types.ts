@@ -1,5 +1,5 @@
 export type MusicCommon = {
-	mbid: string;
+	mbid?: string;
 }
 
 export type Artist = MusicCommon & {

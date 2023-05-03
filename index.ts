@@ -3,12 +3,25 @@ import { sys as tsSys, findConfigFile, readConfigFile, parseJsonConfigFileConten
 import * as path from 'path';
 import { Definition } from 'typescript-json-schema';
 
+type Config = {
+	types: string[];
+	locations: string[]
+}
+
+type BasicSchema = {
+	name: string;
+	properties: string[],
+	required: string[];
+}
+
 export const TypeChecker = {
 
 	/**
 	 * Get config from project tsconfig
+	 *
+	 * @returns {Config} - List of type names and list of locations of type definitions
 	 */
-	getConfig: function() {
+	getConfig: function(): Config {
 		const tsconfigPath = findConfigFile(process.cwd(), tsSys.fileExists, 'tsconfig.json');
 		const tsconfigFile = readConfigFile(tsconfigPath, tsSys.readFile);
 		const parsedTsconfig = parseJsonConfigFileContent(
@@ -23,8 +36,60 @@ export const TypeChecker = {
 		};
 	},
 
+
 	/**
-	 * Determine the TypeScript type of a given value
+	 * Function to compile the schemas of the given types into a simplified format
+	 * TODO: If this could be cached, maybe it could speed up the use of getType()
+	 *
+	 * @returns {BasicSchema[]} - Array of simplified type schemas
+	 */
+	getAllTypeSchemas: function(): BasicSchema[] {
+		const config = this.getConfig();
+		const typesToCheck = config.types;
+		const formatted: BasicSchema[] = [];
+
+		const program = TJS.getProgramFromFiles(
+			config.locations.map((item) => {
+				return path.resolve(item);
+			})
+		);
+
+		const settings: TJS.PartialArgs = {
+			required: true,
+		};
+
+		const generator = TJS.buildGenerator(program, settings);
+
+		[...typesToCheck].forEach((type) => {
+			const schema = TJS.generateSchema(program, type, settings, [], generator);
+
+			// Handle basic types (schema is a single Definition)
+			if(schema.properties) {
+				formatted.push({
+					name: type,
+					properties: Object.keys(schema.properties),
+					required: schema.required || []
+				});
+			}
+
+			// Handle intersection types (schema is an array of Definitions)
+			if(schema.allOf) {
+				const intersection = { name: type, properties: [], required: [] };
+				schema.allOf.forEach((definition: Definition) => {
+					intersection.properties.push(...Object.keys(definition.properties));
+					definition.required && intersection.required.push(...definition.required);
+				});
+
+				formatted.push(intersection);
+			}
+		});
+
+		return formatted;
+	},
+
+
+	/**
+	 * Determine the TypeScript type of the given value
 	 * using a predefined list of types
 	 * @param item - The value to check
 	 * @returns string[] - Array of types specified in the function that the item satisfies
@@ -34,42 +99,15 @@ export const TypeChecker = {
 			return [typeof item];
 		}
 
-		const config = this.getConfig();
-		const typesToCheck = config.types;
+		const typeSchemas = this.getAllTypeSchemas();
 		const itemProperties = Object.keys(item);
 		const matches = [];
 
-		const settings: TJS.PartialArgs = {
-			required: true,
-		};
-
-		const program = TJS.getProgramFromFiles(
-			config.locations.map((item) => {
-				return path.resolve(item);
-			})
-		);
-
-		const generator = TJS.buildGenerator(program, settings);
-
-		[...typesToCheck].forEach((type) => {
-			const schema = TJS.generateSchema(program, type, settings, [], generator);
-			let allProperties = [];
-			let requiredProperties = [];
-
-			// Handle basic types (schema is a single Definition)
-			if(schema.properties) {
-				allProperties = [...allProperties, ...Object.keys(schema.properties)];
-				requiredProperties = schema.required ? [...requiredProperties, ...schema.required] : [...requiredProperties];
-			}
-
-			// Handle intersection types (schema is an array of Definitions)
-			schema.allOf && schema.allOf.forEach((definition: Definition) => {
-				allProperties = [...allProperties, ...Object.keys(definition.properties)];
-				requiredProperties = [...requiredProperties, ...definition.required];
-			});
-
-			if(requiredProperties && requiredProperties.every(prop => itemProperties.includes(prop))) {
-				matches.push(type);
+		typeSchemas.forEach((type) => {
+			// 1. Check that all the type's required fields are present in the item: Alone, this would return all match candidates
+			// 2. Check that all the item's fields are valid properties of the type: Find closer matches by considering all fields
+			if(type.required.every(prop => itemProperties.includes(prop)) && itemProperties.every(prop => type.properties.includes(prop))) {
+				matches.push(type.name);
 			}
 		});
 
