@@ -6,7 +6,7 @@ jest.mock('../index', () => {
 		__esModule: true,
 		TypeChecker: {
 			getConfig: jest.fn().mockReturnValue({
-				types: ['Artist', 'Album', 'Venue'],
+				types: ['Artist', 'Album', 'Venue', 'Coords'],
 				locations: ['./test/types.ts']
 			}),
 			getAllTypeSchemas: module.TypeChecker.getAllTypeSchemas,
@@ -21,6 +21,9 @@ describe('Typechecker', () => {
 
 		it('collects the schemas for all given types', () => {
 			const collection = TypeChecker.getAllTypeSchemas();
+
+			expect(collection).toHaveLength(4);
+			expect(Object.keys(collection[0])).toEqual(['name', 'properties', 'required']);
 		});
 	});
 

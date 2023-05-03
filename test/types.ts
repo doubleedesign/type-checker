@@ -16,4 +16,10 @@ export type Album = MusicCommon & {
 
 export type Venue = {
 	name: string;
+	coords?: Coords
+}
+
+export type Coords = {
+	lat: number;
+	lng: number;
 }
