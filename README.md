@@ -35,6 +35,6 @@ const type: string[] = TypeChecker.getType(boss); // ['Artist']
 
 ### Roadmap/future goals
 
-- Make it check value types, not just key names
+- Make it check value types, not just key names.
 - Make it work in the browser.
 - Improve performance.
