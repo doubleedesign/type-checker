@@ -1,7 +1,8 @@
 import * as TJS from 'typescript-json-schema';
-import { sys, findConfigFile, readConfigFile, parseJsonConfigFileContent } from 'typescript';
-import * as path from 'path';
+import pkg from 'typescript';
+const { sys, findConfigFile, readConfigFile, parseJsonConfigFileContent } = pkg;
 import { Definition } from 'typescript-json-schema';
+import * as path from 'path';
 
 type Config = {
 	types: string[];
