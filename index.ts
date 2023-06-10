@@ -77,8 +77,10 @@ export const TypeChecker = {
 			if(schema.allOf) {
 				const intersection = { name: type, properties: [], required: [] };
 				schema.allOf.forEach((definition: Definition) => {
-					intersection.properties.push(...Object.keys(definition.properties));
-					definition.required && intersection.required.push(...definition.required);
+					if(definition.type && definition.properties) {
+						intersection.properties.push(...Object.keys(definition.properties));
+						definition.required && intersection.required.push(...definition.required);
+					}
 				});
 
 				formatted.push(intersection);
