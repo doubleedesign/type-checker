@@ -65,7 +65,7 @@ export const TypeChecker = {
 			const schema = TJS.generateSchema(program, type, settings, [], generator);
 
 			// Handle basic types (schema is a single Definition)
-			if(schema.properties) {
+			if(schema?.properties) {
 				formatted.push({
 					name: type,
 					properties: Object.keys(schema.properties),
@@ -74,7 +74,7 @@ export const TypeChecker = {
 			}
 
 			// Handle intersection types (schema is an array of Definitions)
-			if(schema.allOf) {
+			if(schema?.allOf) {
 				const intersection = { name: type, properties: [], required: [] };
 				schema.allOf.forEach((definition: Definition) => {
 					if(definition.type && definition.properties) {
